@@ -1,25 +1,112 @@
-# Client-Expense-Tracker-GUI
-The full code for a sleek javaFx desktop app that helps users manage personal expenses and financial categories.
-This was designed with the intention to be dynamic and reactive to user input and give the feel of any modern expense tracker.
+# Client Expense Tracker (JavaFX)
 
-I created this project to learn more about the capabilites and components of Java and i was not dissapointed.
-All i had learnt about the basic java syntax and OOP concept were put to the test during this project.
+A sleek JavaFX desktop app that helps users manage personal expenses and financial categories. Designed to be dynamic and reactive to user input, this project mimics the feel of modern expense tracking tools.
 
-In this project I learnt about the process of using a 'Stage' and the concept behind switching between scenes with a 'Viewnavigator' class.
-By alternating between the uses of VBOX and HBOX for the layout, labels, textfields and buttons, the expense tracker interfaxce slowly came to life.
-I had to think about how the different 'View' classes that i had created needed to also function properly. This was achieved by a various 'Controller' classes which would use dependency injection to comminucate with the view classes, allowing me to create methods like the one below to keep things organised and easily reusable:
+---
 
-private void initialize(){
-        loginView.getLoginButton().setOnMouseClicked(new EventHandler<MouseEvent>() {
-            public void handle(MouseEvent mouseEvent) {
-               if (!validateUser()){
-                   return;
-               }
+## 🎯 Purpose
 
-In this project I learnt:
-- How to add and style components
-- The logic behind extracting data and converting them into JSON using the 'JsonObject' property
-- Creating HTTP conncection methods that would be read and write Json date to the backend server that i created seperately.
+I built this project to deepen my understanding of Java fundamentals — especially object-oriented programming, GUI development with JavaFX, and client-server communication. What started as a way to practice Java quickly became a hands-on exploration of **layouts, event handling, and API communication**.
+
+---
+
+## 💡 What I Learned
+
+### 🔁 Scene Navigation and Layouts
+- Worked with `Stage`, `Scene`, `VBox`, and `HBox` to construct clean and responsive UI layouts.
+- Created a reusable `ViewNavigator` class to manage transitions between views.
+- Applied styling through CSS and explored JavaFX component customization.
+
+### 👥 MVC Pattern in Practice
+- Separated UI logic (`View` classes) from application logic (`Controller` classes).
+- Used **dependency injection** to connect views to their controllers, keeping code organized and reusable.
+
+Example pattern:
+```java
+private void initialize() {
+    loginView.getLoginButton().setOnMouseClicked(event -> {
+        if (!validateUser()) return;
+        // navigate to dashboard
+    });
+}
+```
+### Backend Communication
+- Built a separate Java backend to handle user and transaction data.
+- Used HttpURLConnection and JsonObject to send/receive data via HTTP.
+- Implemented basic CRUD operations by connecting the client app to the backend API.
+
+Example pattern:
+```java
+ public static List<TransactionCategory> getAllTransactionCategoriesByUser(User user) {
+        List<TransactionCategory> categories = new ArrayList<>();
+
+        HttpURLConnection conn = null;
+        try {
+            conn = ApiUtil.fetchApi("/api/v1/transaction-category/user/" + user.getId(),
+                    ApiUtil.RequestMethod.GET, null);
+
+            if (conn.getResponseCode() != 200) {
+                System.out.println("error: " + conn.getResponseCode());
+                ;
+            }
+
+            String result = ApiUtil.readApiResponse(conn);
+            JsonArray resultJsonArray = new JsonParser().parse(result).getAsJsonArray();
+
+            for (JsonElement jsonElement : resultJsonArray) {
+                int categoryId = jsonElement.getAsJsonObject().get("id").getAsInt();
+                String categoryName = jsonElement.getAsJsonObject().get("categoryName").getAsString();
+                String categoryColour = jsonElement.getAsJsonObject().get("categoryColour").getAsString();
+
+                categories.add(new TransactionCategory(categoryId, categoryName, categoryColour));
+            }
+            return categories;
+```
+
+### 🗃️ SQL and Utility Classes
+- Created SqlUtil and ApiUtil utility classes to streamline backend interaction.
+- Learned how to parse and format JSON.
+
+---
+
+## 🛠 Technologies Used
+- Java 23
+- javaFX
+- MySQL
+- CSS Bootstrap
+- Maven
+
+---
+
+### 🧠 Reflections
+
+This was my first major Java GUI project, and it pushed me to combine everything I’ve learned,
+from Java syntax and OOP to scene navigation and HTTP communication. 
+I especially enjoyed building the backend separately and seeing how client-server communication works in real time.
+The code for the backend server can be found in the **Expense-Tracker-Backend** repository.
 
 
-Setting up the SqlUtil class and the ApiUtil class was probably the most enjoyable part of this project as it required that i went away and gained a better understanding of how information can be passed around. This is the part of my code in this repo that connects to the API server i created in a seperate java project, which was in charge of CRUD operations and persisting data to the SQL database.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
