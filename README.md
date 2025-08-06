@@ -2,6 +2,11 @@
 
 A sleek JavaFX desktop app that helps users manage personal expenses and financial categories. Designed to be dynamic and reactive to user input, this project mimics the feel of modern expense tracking tools.
 
+## 📸 Screenshot
+
+![App Screenshot](screenshot.png)
+
+
 ---
 
 ## 🎯 Purpose
